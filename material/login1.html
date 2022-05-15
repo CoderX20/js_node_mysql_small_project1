@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>login</title>
+</head>
+
+<body>
+    <div id="main_page">
+        <div id="login_part">
+            <a class="information">
+                账号<input type="text" name="" id="account" class="input">
+            </a><br>
+            <a class="information">
+                密码<input type="password" name="" id="password" class="input">
+            </a><br>
+            <input type="button" value="登录" onclick="sub()" id="login" class="but">
+            <input type="button" value="注册" onclick="register()" id="register" class="but">
+        </div>
+    </div>
+    <style>
+        #main_page {
+            background-color: aqua;
+            width: 100%;
+            height: 800px;
+        }
+
+        #login_part {
+            background-color: burlywood;
+            width: 50%;
+            height: 20%;
+            position: relative;
+            top: 5cm;
+            left: 10cm;
+        }
+
+        .input {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: medium;
+            margin: 10px;
+        }
+
+        a {
+            position: relative;
+            left: 5cm;
+        }
+
+        .but {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: medium;
+            margin: 10px;
+            position: relative;
+            left: 6cm;
+        }
+    </style>
+    <script>
+        function sub() {
+            var account = document.getElementById('account').value;
+            var password = document.getElementById('password').value;
+            if (account == "") {
+                alert("请填写账号")
+                return
+            }
+            else if (password == "") {
+                alert("请填写密码")
+                return
+            }
+            var http_request = new XMLHttpRequest()
+            var url = "http://127.0.0.1:5500/loginCheck/?" + "account=" + account + "&password=" + password
+            http_request.open('POST', url)
+            http_request.setRequestHeader('Access-Control-Allow-Origin', '*')
+            http_request.setRequestHeader('Content-Type', 'application/json;charset=utf-8')
+            http_request.setRequestHeader('Accept', '*')
+            http_request.setRequestHeader('Access-Control-Max-Age', '2')
+            http_request.send()
+            http_request.onreadystatechange = function () {
+                if (http_request.readyState == 4 && this.status == 200) {
+                    var responseData = http_request.responseText;
+                    // console.log(responseData)
+                    if (responseData == 'false') {
+                        alert("密码错误或未注册账号")
+                    }
+                    else if (responseData == 'true') {
+                        // alert("登陆成功")
+                        window.location.href='http://127.0.0.1:5500/profile/?account='+account
+                    }
+                }
+            }
+        }
+        function register(){
+            window.location.href='http://127.0.0.1:5500/register/'
+        }
+    </script>
+</body>
+
+</html>

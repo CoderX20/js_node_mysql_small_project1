@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="main_page">
+        <div id="profile_page">
+            <a class="information">
+                账号<input type="text" name="" id="account" class="input" value="@account">
+            </a><br>
+            <a id="information">
+                密码<input type="text" name="" id="password" class="input" value="@password">
+            </a><br>
+            <a id="information">
+                状态<select name="status" id="status" class="input">
+                    <option value="1">1</option>
+                    <option value="0">0</option>
+                </select><br>
+            </a><br>
+            <input type="button" value="退出" id="logout" class="but" onclick="logout()">
+            <input type="button" value="更改" id="update" class="but" onclick="update()">
+            <input type="button" value="注销" id="delete" class="but" onclick="del()">
+        </div>
+    </div>
+    <style>
+        #main_page {
+            background-color: aqua;
+            width: 100%;
+            height: 800px;
+        }
+
+        #profile_page {
+            background-color: burlywood;
+            width: 50%;
+            height: 25%;
+            position: relative;
+            top: 5cm;
+            left: 10cm;
+        }
+
+        .input {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: medium;
+            margin: 10px;
+        }
+
+        a {
+            position: relative;
+            left: 5cm;
+        }
+
+        .but {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: medium;
+            margin: 10px;
+            position: relative;
+            left: 5.6cm;
+        }
+    </style>
+    <script>
+        function logout() {
+            var url_parameters = window.location.search.split('=')[1]
+            window.location.href = 'http://127.0.0.1:5500/login/'
+        }
+        function update() {
+            if (window.confirm("确认修改")) {
+                var new_account = document.getElementById('account').value;
+                var password = document.getElementById('password').value;
+                var status = Number(document.getElementById('status').value);
+                // console.log(Number(status))
+                if (new_account == '' || password == '') {
+                    alert("请完善信息")
+                    return
+                }
+                var origin_account = window.location.search.split('=')[1]
+                const http_request = new XMLHttpRequest()
+                var url = 'http://127.0.0.1:5500/update/?new_account=' + new_account
+                    + "&password=" + password
+                    + "&status=" + status
+                    + "&origin_account=" + origin_account
+                http_request.open('POST', url)
+                http_request.setRequestHeader('Access-Control-Allow-Origin', '*')
+                http_request.setRequestHeader('Content-Type', 'application/json;charset=utf-8')
+                http_request.setRequestHeader('Accept', '*')
+                http_request.setRequestHeader('Access-Control-Max-Age', '2')
+                http_request.send()
+                http_request.onreadystatechange = function () {
+                    if (http_request.readyState == 4 && this.status == 200) {
+                        var responseData = http_request.responseText;
+                        // console.log(responseData)
+                        if (responseData == 'false') {
+                            alert("更新失败")
+                        }
+                        else if (responseData == 'true') {
+                            alert("更新成功")
+                            window.location.reload()
+                        }
+                    }
+                }
+            }
+            else {
+                window.location.reload()
+            }
+        }
+        function del() {
+            if (window.confirm("确认删除？")) {
+                var account = document.getElementById("account").value;
+                const http_request = new XMLHttpRequest()
+                var url = 'http://127.0.0.1:5500/delete/?account=' + account
+                http_request.open('POST', url)
+                http_request.setRequestHeader('Access-Control-Allow-Origin', '*')
+                http_request.setRequestHeader('Content-Type', 'application/json;charset=utf-8')
+                http_request.setRequestHeader('Accept', '*')
+                http_request.setRequestHeader('Access-Control-Max-Age', '2')
+                http_request.send()
+                http_request.onreadystatechange = function () {
+                    if (http_request.readyState == 4 && this.status == 200) {
+                        var responseData = http_request.responseText;
+                        // console.log(responseData)
+                        if (responseData == 'false') {
+                            alert("删除失败")
+                        }
+                        else if (responseData == 'true') {
+                            alert("删除成功")
+                            window.location.href = 'http://127.0.0.1:5500/login/'
+                        }
+                    }
+                }
+            }
+            else {
+                window.location.reload()
+            }
+        }
+    </script>
+</body>
+
+</html>
