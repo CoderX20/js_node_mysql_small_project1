@@ -1,6 +1,14 @@
 # js_node_mysql_small_project1
 学习node.js期间利用原生js做的小型项目，主要测试前后端数据传输的问题
 
+## 运行项目
+
+在项目文件夹所在终端中输入命令
+
+```
+node node_main.js
+```
+
 ## 所用框架express
 
 下载express
