@@ -9,6 +9,8 @@
 node node_main.js
 ```
 
+在浏览器中输入url:http://127.0.0.1:5500/login/
+
 ## 所用框架express
 
 下载express
